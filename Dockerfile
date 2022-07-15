@@ -9,6 +9,11 @@ ENV TARGET_DIR="/usr/local/lib/php-code-quality" \
 
 RUN mkdir -p $TARGET_DIR
 
+COPY ./launch.sh /usr/local/bin/docker-entrypoint-wrapper.sh
+COPY ./composer.json $TAGET_DIR/composer.json
+COPY ./composer.lock $TAGET_DIR/composer.lock
+
+
 WORKDIR $TARGET_DIR
 
 COPY --from=composer:2 /usr/bin/composer $TARGET_DIR/
@@ -22,21 +27,12 @@ RUN apt-get update ;\
       libxml2-dev ;\
   docker-php-ext-install xml
 
+RUN apt-get update -y  && apt-get install -y graphviz
+RUN apt-get update -y  && apt-get install -y plantuml
+
+
+
 # RUN chmod 744 $TARGET_DIR/composer-installer.sh
 RUN chmod 744 /usr/local/bin/composer
-
-# Run composer installation of needed tools
-  # $TARGET_DIR/composer-installer.sh ;\
-# RUN \
-#   composer selfupdate ;\
-#   composer require --prefer-stable --prefer-dist \
-#     "squizlabs/php_codesniffer:^3.6" \
-#     "phpunit/phpunit:^9.5" \
-#     "phploc/phploc:^7.0" \
-#     "pdepend/pdepend:^2.10" \
-#     "phpmd/phpmd:^2.10" \
-#     "sebastian/phpcpd:^6.0" \
-#     "friendsofphp/php-cs-fixer:^3.2" \
-#     "phpcompatibility/php-compatibility:^9.3" \
-#     "phpmetrics/phpmetrics:^2.7" \
-#     "phpstan/phpstan:^1.1"
+RUN composer selfupdate ;\
+  composer install --no-interaction

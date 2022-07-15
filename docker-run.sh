@@ -1,0 +1,1 @@
+docker run -it quality /bin/bash
