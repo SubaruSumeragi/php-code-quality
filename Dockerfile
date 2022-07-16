@@ -26,9 +26,12 @@ RUN apt-get update -y ;\
       libxml2-dev ;\
   docker-php-ext-install xml
 
-RUN apt-get update -y  && apt-get install -y graphviz
-RUN apt-get update -y  && apt-get install -y plantuml
+RUN apt-get install -y graphviz
+RUN apt-get install -y plantuml
 
+RUN { \
+  echo 'memory_limit=${PHP_MEMORY_LIMIT}' ;\
+  } > /usr/local/etc/php/conf.d/php.ini
 
 
 # RUN chmod 744 $TARGET_DIR/composer-installer.sh
